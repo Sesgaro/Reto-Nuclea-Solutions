@@ -2,6 +2,7 @@ import flet as ft
 import pandas as pd
 
 def main(page: ft.Page):
+    
     def carga_archivo(e):
         archivo_info.pick_files(allow_multiple=False,allowed_extensions=["xls","xlsx"])
         
@@ -12,7 +13,10 @@ def main(page: ft.Page):
             archivo_seleccionado.value = 'CANCELADO'
     
         archivo_seleccionado.update()
-        
+        page.snack_bar = ft.SnackBar(ft.Text("Espera un momento, estamos analizando el archivo"))
+        page.snack_bar.open = True
+
+        page.update()
         if archivo_seleccionado.value!='CANCELADO':
             try:
                 datos=pd.read_excel(archivo_seleccionado.value)
@@ -27,16 +31,19 @@ def main(page: ft.Page):
                     if elemento not in lista_sin_duplicados:
                         lista_sin_duplicados.append(elemento)
                         posiciones.append(i)
-                # t.value=lista[1]
-                # for i in lista:
-                    
+                b.disabled=False
             except Exception as ex:
                 t.value = str(ex)
-        # t.update()
+        t.update()
+        page.snack_bar = ft.SnackBar(ft.Text("Listo!"))
+        page.snack_bar.open = True
         # page.update()
+        return datas(None)
 
     def datas(e):
         if dts_global is not None:
+            if b.data >= len(posiciones):
+                b.data=0
             t.value=lista_id[posiciones[b.data]]
             print(posiciones[b.data])
             b.data=b.data+1
@@ -55,6 +62,7 @@ def main(page: ft.Page):
                     'Siguiente Empleado',
                     icon=ft.icons.ARROW_BACK,
                     on_click=datas,
+                    disabled=True,
                     data=0
                 )
 
@@ -73,6 +81,11 @@ def main(page: ft.Page):
             [
                 b,  
                 t
+            ],
+        ),
+        ft.Column(
+            [
+            
             ]
         )
     )
