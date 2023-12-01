@@ -1,29 +1,111 @@
 import flet as ft
+from typing import Dict
 import random
 import pandas as pd
 
 def main(page: ft.Page):
+#   Se declaran las animaciones, columnas y botones
+    page.overlay.extend([archivo_info])
+
+    b=ft.ElevatedButton(
+        'Siguiente Empleado',
+        icon=ft.icons.ARROW_BACK,
+        on_click=datas,
+        disabled=True,
+        data=-1
+    )
     
+    page.scroll='auto'
+
+    page.overlay.append(file_picker)
+
+    barras_progreso: Dict[str, ft.ProgressRing] = {}
+
+    archivos = ft.Ref[ft.Column]()
+    
+    btn_subir = ft.Ref[ft.ElevatedButton]()
+
+    proyectos=ft.DataTable(
+        border=ft.border.all(2, "#2f2f2f"),
+        border_radius=10,
+        divider_thickness=0,
+        vertical_lines=ft.border.BorderSide(2, "#2f2f2f"),
+        horizontal_lines=ft.border.BorderSide(1, "#2f2f2f"),
+        column_spacing=10,
+        columns=[
+            ft.DataColumn(ft.Text('Fecha')),
+            ft.DataColumn(ft.Text('Proyecto')),
+            ft.DataColumn(ft.Text('Leyenda P')),
+            ft.DataColumn(ft.Text('Herramienta')),
+            ft.DataColumn(ft.Text('Leyenda H')),
+            ft.DataColumn(ft.Text('Magnitud'))
+        ],
+        rows=[]
+    )
+
+    archivo_info = ft.FilePicker(on_result=leer_resultados)
+
+    archivo_seleccionado = ft.Text()
+    
+    t=ft.Text()
+    
+    grafica=ft.Container(
+        visible=False,
+        content=proyectos,
+        bgcolor='#212121',        
+        )
+    
+    #Carga de archivos
+    def file_picker_result(event: ft.FilePickerResultEvent):
+        btn_subir.current.disabled = True if event.files is None else False
+        barras_progreso.clear()
+        archivos.current.controls.clear()
+
+        if event.files is not None:
+            for f in event.files:
+                pbr_archivo = ft.ProgressRing(value=0, bgcolor='#eeeeee', width=20, height=20)
+                barras_progreso[f.name] = pbr_archivo
+                archivo_seleccionado.value=f.name
+                archivos.current.controls.append(ft.Row([pbr_archivo, ft.Text(f.name)]))
+                # archivo_seleccionado.update()
+        
+        page.update()
+
+    def on_upload_progress(event: ft.FilePickerUploadEvent):
+        barras_progreso[event.file_name].value = event.progress
+        barras_progreso[event.file_name].update()
+    
+    file_picker = ft.FilePicker(on_result=file_picker_result, on_upload=on_upload_progress)
+
+    def upload_files(event):
+        lista_archivos = []
+
+        if file_picker.result is not None and file_picker.result.files is not None:
+            for f in file_picker.result.files:
+                lista_archivos.append(
+                    ft.FilePickerUploadFile(
+                        f.name,
+                        upload_url=page.get_upload_url(f.name, 600)
+                    )
+                )
+            
+            file_picker.upload(lista_archivos)
+            return(leer_resultados())
+
+    
+
     def carga_archivo(e):
         archivo_info.pick_files(allow_multiple=False,allowed_extensions=["xls","xlsx"])
-        
-    def leer_resultados(event: ft.FilePickerResultEvent):        
-        if event.files:
-            archivo_seleccionado.value = ', '.join(map(lambda f: f.name,event.files))
-        else:
-            archivo_seleccionado.value = 'CANCELADO'
-            page.snack_bar = ft.SnackBar(ft.Text("Error, archivo no cargado"))
-            page.snack_bar.open = True
     
-        archivo_seleccionado.update()
-        if archivo_seleccionado.value!='CANCELADO':
-            page.snack_bar = ft.SnackBar(ft.Text("Espera un momento, estamos analizando el archivo"))
-            page.snack_bar.open = True
-            page.update()
+    #Al momento de cargarse el archivo, se lee y se separan datos en diferentes listas
+    def leer_resultados():        
+        page.snack_bar = ft.SnackBar(ft.Text("Espera un momento, estamos analizando el archivo"))
+        page.snack_bar.open = True
+        page.update()
             
-            try:
+        try:
                 
-                datos=pd.read_excel(archivo_seleccionado.value)
+                datos=pd.read_excel(f"uploads/{archivo_seleccionado.value}")
                 datos.sort_values(by=['ID','Fecha','Proyecto'], ascending=True, inplace=True)
                 global dts_global,pos_id,lista_id,color_p_list,color_t_list,lista_id,lista_pro,lista_tl,lista_fecha,lista_sd_pro,lista_sd_tl
                 dts_global=datos
@@ -79,7 +161,7 @@ def main(page: ft.Page):
                 
                 
                     
-            except Exception as ex:
+        except Exception as ex:
                 t.value = str(ex)
                 print(str(ex))
         t.update()
@@ -91,23 +173,8 @@ def main(page: ft.Page):
         page.snack_bar = ft.SnackBar(ft.Text("Listo!"))
         page.snack_bar.open = True
         return datas(None)
-    proyectos=ft.DataTable(
-        border=ft.border.all(2, "#2f2f2f"),
-        border_radius=10,
-        divider_thickness=0,
-        vertical_lines=ft.border.BorderSide(2, "#2f2f2f"),
-        horizontal_lines=ft.border.BorderSide(1, "#2f2f2f"),
-        column_spacing=10,
-        columns=[
-            ft.DataColumn(ft.Text('Fecha')),
-            ft.DataColumn(ft.Text('Proyecto')),
-            ft.DataColumn(ft.Text('Leyenda P')),
-            ft.DataColumn(ft.Text('Herramienta')),
-            ft.DataColumn(ft.Text('Leyenda H')),
-            ft.DataColumn(ft.Text('Magnitud'))
-        ],
-        rows=[]
-    )
+    
+    #Se imprimen datos segun cada empleado
     def datas(e):
         proyectos.rows.clear()
         proyectos.update()
@@ -168,36 +235,26 @@ def main(page: ft.Page):
             
             
 
-    archivo_info = ft.FilePicker(on_result=leer_resultados)
-    archivo_seleccionado = ft.Text()
-    t=ft.Text()
-    grafica=ft.Container(
-                visible=False,
-                content=proyectos,
-                bgcolor='#212121',
-                
-                )
     
-    page.overlay.extend([archivo_info])
-
-    b=ft.ElevatedButton(
-                    'Siguiente Empleado',
-                    icon=ft.icons.ARROW_BACK,
-                    on_click=datas,
-                    disabled=True,
-                    data=-1
-                )
-    page.scroll='auto'
+    
+    #Se inicializa la ventana
     page.add(
         
         ft.Row(
             [
                 ft.ElevatedButton(
-                    'Carga tu archivo',
-                    icon=ft.icons.UPLOAD_FILE,
-                    on_click=carga_archivo
-                ),
-                archivo_seleccionado,
+            'Seleccionar archivos...',
+            icon=ft.icons.FOLDER_OPEN,
+            on_click=lambda _: file_picker.pick_files(allow_multiple=False)
+        ),
+        ft.Column(ref=archivos),
+            ft.ElevatedButton(
+                    'Subir',
+                    ref=btn_subir,
+                    icon=ft.icons.UPLOAD,
+                    on_click=upload_files,
+                    disabled=True
+                )
             ]
         ),
         ft.Row(
@@ -213,4 +270,4 @@ def main(page: ft.Page):
         )
     )
     
-ft.app(target=main)
+ft.app(target=main, upload_dir='uploads')
