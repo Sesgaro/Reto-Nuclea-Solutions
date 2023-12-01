@@ -1,7 +1,13 @@
 # Reto-Nuclea-Solutions
-Librerias utilizadas:
-  Flet, Pandas
-- El archivo a leer tiene que estar dentro del directorio del proyecto.
-- Al momento de leer el archivo este cargara el primer ID en orden alfabetico
+**Requerimentos:**
+* Flet, Pandas, openpyxl en sus ultimas versiones
+
+**Como Ejecutar:**
+* Inicia tu codespace
+* En la terminal, ejecuta el siguiente comando:  *flet run -w "App.py"*
+
+**Funcionamiento**
+- Selecciona el arrchivo a leer.
+- Al momento de subir el archivo este sera leido y ordenado
 - Se mostrara una tabla con la fecha, proyecto, y herramienta con la que trabajo
 - Se mostrara una leyenda donde se le asignara un color aleatorio a cada herramienta y proyecto.
