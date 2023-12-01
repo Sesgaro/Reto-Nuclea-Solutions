@@ -4,57 +4,7 @@ import random
 import pandas as pd
 
 def main(page: ft.Page):
-#   Se declaran las animaciones, columnas y botones
-    page.overlay.extend([archivo_info])
 
-    b=ft.ElevatedButton(
-        'Siguiente Empleado',
-        icon=ft.icons.ARROW_BACK,
-        on_click=datas,
-        disabled=True,
-        data=-1
-    )
-    
-    page.scroll='auto'
-
-    page.overlay.append(file_picker)
-
-    barras_progreso: Dict[str, ft.ProgressRing] = {}
-
-    archivos = ft.Ref[ft.Column]()
-    
-    btn_subir = ft.Ref[ft.ElevatedButton]()
-
-    proyectos=ft.DataTable(
-        border=ft.border.all(2, "#2f2f2f"),
-        border_radius=10,
-        divider_thickness=0,
-        vertical_lines=ft.border.BorderSide(2, "#2f2f2f"),
-        horizontal_lines=ft.border.BorderSide(1, "#2f2f2f"),
-        column_spacing=10,
-        columns=[
-            ft.DataColumn(ft.Text('Fecha')),
-            ft.DataColumn(ft.Text('Proyecto')),
-            ft.DataColumn(ft.Text('Leyenda P')),
-            ft.DataColumn(ft.Text('Herramienta')),
-            ft.DataColumn(ft.Text('Leyenda H')),
-            ft.DataColumn(ft.Text('Magnitud'))
-        ],
-        rows=[]
-    )
-
-    archivo_info = ft.FilePicker(on_result=leer_resultados)
-
-    archivo_seleccionado = ft.Text()
-    
-    t=ft.Text()
-    
-    grafica=ft.Container(
-        visible=False,
-        content=proyectos,
-        bgcolor='#212121',        
-        )
-    
     #Carga de archivos
     def file_picker_result(event: ft.FilePickerResultEvent):
         btn_subir.current.disabled = True if event.files is None else False
@@ -235,7 +185,57 @@ def main(page: ft.Page):
             
             
 
+    #   Se declaran las animaciones, columnas y botones
+
+    b=ft.ElevatedButton(
+        'Siguiente Empleado',
+        icon=ft.icons.ARROW_BACK,
+        on_click=datas,
+        disabled=True,
+        data=-1
+    )
     
+    page.scroll='auto'
+
+    page.overlay.append(file_picker)
+
+    barras_progreso: Dict[str, ft.ProgressRing] = {}
+
+    archivos = ft.Ref[ft.Column]()
+    
+    btn_subir = ft.Ref[ft.ElevatedButton]()
+
+    proyectos=ft.DataTable(
+        border=ft.border.all(2, "#2f2f2f"),
+        border_radius=10,
+        divider_thickness=0,
+        vertical_lines=ft.border.BorderSide(2, "#2f2f2f"),
+        horizontal_lines=ft.border.BorderSide(1, "#2f2f2f"),
+        column_spacing=10,
+        columns=[
+            ft.DataColumn(ft.Text('Fecha')),
+            ft.DataColumn(ft.Text('Proyecto')),
+            ft.DataColumn(ft.Text('Leyenda P')),
+            ft.DataColumn(ft.Text('Herramienta')),
+            ft.DataColumn(ft.Text('Leyenda H')),
+            ft.DataColumn(ft.Text('Magnitud'))
+        ],
+        rows=[]
+    )
+
+    archivo_info = ft.FilePicker(on_result=leer_resultados)
+
+    archivo_seleccionado = ft.Text()
+    
+    t=ft.Text()
+    
+    grafica=ft.Container(
+        visible=False,
+        content=proyectos,
+        bgcolor='#212121',        
+        )
+    
+    page.overlay.extend([archivo_info])
     
     #Se inicializa la ventana
     page.add(
