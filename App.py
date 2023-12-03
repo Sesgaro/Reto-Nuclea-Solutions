@@ -24,6 +24,9 @@ def main(page: ft.Page):
     def on_upload_progress(event: ft.FilePickerUploadEvent):
         barras_progreso[event.file_name].value = event.progress
         barras_progreso[event.file_name].update()
+
+        if barras_progreso[event.file_name].value==1:
+            return(leer_resultados())
     
     file_picker = ft.FilePicker(on_result=file_picker_result, on_upload=on_upload_progress)
 
@@ -40,8 +43,6 @@ def main(page: ft.Page):
                 )
             
             file_picker.upload(lista_archivos)
-            return(leer_resultados())
-
     
 
     def carga_archivo(e):
