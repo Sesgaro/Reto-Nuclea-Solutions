@@ -44,9 +44,6 @@ def main(page: ft.Page):
             
             file_picker.upload(lista_archivos)
     
-
-    def carga_archivo(e):
-        archivo_info.pick_files(allow_multiple=False,allowed_extensions=["xls","xlsx"])
     
     #Al momento de cargarse el archivo, se lee y se separan datos en diferentes listas
     def leer_resultados():        
@@ -127,6 +124,19 @@ def main(page: ft.Page):
     
     #Se imprimen datos segun cada empleado
     def datas(e):
+        grafica.visible=False
+        grafica.update()
+        carga.visible=True
+        carga.update()
+        t.visible=False
+        t.update()
+        magnitud=1
+        fecha_t=[]
+        proye_t=[]
+        tool_t=[]
+        fecha_t.append(lista_fecha[pos_id[b.data+1]])
+        proye_t.append(lista_pro[pos_id[b.data+1]])
+        tool_t.append(lista_tl[pos_id[b.data+1]])
         proyectos.rows.clear()
         proyectos.update()
         b.disabled=True
@@ -141,9 +151,9 @@ def main(page: ft.Page):
                 
                 for i in range(pos_id[b.data], pos_id[b.data+1]):
                                                 
-                    fecha=ft.DataCell(ft.Text(lista_fecha[i]))
-                    proye=ft.DataCell(ft.Text(lista_pro[i])),
-                    tool=ft.DataCell(ft.Text(lista_tl[i]))
+                    # fecha=ft.DataCell(ft.Text(lista_fecha[i]))
+                    # proye=ft.DataCell(ft.Text(lista_pro[i])),
+                    # tool=ft.DataCell(ft.Text(lista_tl[i]))
                     for z,x in enumerate(color_p_list):
                         if lista_pro[i] == lista_sd_pro[z]:
                             color_p=ft.DataCell(ft.Container(bgcolor=x))
@@ -156,19 +166,31 @@ def main(page: ft.Page):
                             break
                         else :
                             color_t=ft.DataCell(ft.Container(bgcolor='black'))
+
                     
-                    proyectos.rows.append(ft.DataRow(
+                    if lista_fecha[i+1] in fecha_t and lista_pro[i+1] in proye_t and lista_tl[i+1] in tool_t:
+                        magnitud=magnitud+1
+                    else:
+                        proyectos.rows.append(ft.DataRow(
                             cells=[
                             ft.DataCell(ft.Text(lista_fecha[i])),
                             ft.DataCell(ft.Text(lista_pro[i])),
                             color_p,
                             ft.DataCell(ft.Text(lista_tl[i])),
                             color_t,
-                            ft.DataCell(ft.Text('1')),
-                            ]
+                            ft.DataCell(ft.Text(magnitud)),
+                                    ]
+                                )
                             )
-                        )
-                # aux=cont
+                        fecha_t=[]
+                        proye_t=[]
+                        tool_t=[]
+                        fecha_t.append(lista_fecha[i+1])
+                        proye_t.append(lista_pro[i+1])
+                        tool_t.append(lista_tl[i+1])
+                        magnitud=1
+                
+                
                 t.value=lista_id[pos_id[b.data]]
                 print(pos_id[b.data+1])
                 print(b.data)
@@ -177,11 +199,16 @@ def main(page: ft.Page):
 
                 b.update()
                 t.update()
-                proyectos.update()
+                t.visible=True
+                t.update()
+                carga.visible=False
+                carga.update()
+                grafica.visible=True
+                grafica.update()
                 page.update()
         except Exception as ex:
             print(str(ex))
-            b.disabled=False
+            b.disabled=True
             b.update()
             
             
@@ -230,9 +257,12 @@ def main(page: ft.Page):
     
     t=ft.Text()
     
+    carga=ft.ProgressRing(visible=False)
+
     grafica=ft.Container(
         visible=False,
-        content=proyectos,
+        alignment=ft.alignment.center,
+        content=ft.Row([proyectos,carga,]),
         bgcolor='#212121',        
         )
     
@@ -246,7 +276,7 @@ def main(page: ft.Page):
                 ft.ElevatedButton(
             'Seleccionar archivos...',
             icon=ft.icons.FOLDER_OPEN,
-            on_click=lambda _: file_picker.pick_files(allow_multiple=False)
+            on_click=lambda _: file_picker.pick_files(allow_multiple=False,allowed_extensions=["xls","xlsx"])
         ),
         ft.Column(ref=archivos),
             ft.ElevatedButton(
@@ -265,10 +295,10 @@ def main(page: ft.Page):
             ],
         ),
         grafica,
+        carga,
         ft.Column(
             [
             ]
         )
     )
-    
 ft.app(target=main, upload_dir='uploads')
