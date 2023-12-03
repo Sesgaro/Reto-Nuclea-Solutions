@@ -1,6 +1,6 @@
 # Reto-Nuclea-Solutions
 **Requerimentos:**
-* Flet, Pandas, openpyxl en sus ultimas versiones
+* Flet, Pandas, openpyxl, typing en sus ultimas versiones
 
 **Como Ejecutar:**
 * Inicia tu codespace
