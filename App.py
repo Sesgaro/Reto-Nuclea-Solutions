@@ -3,6 +3,8 @@ from typing import Dict
 import random
 import pandas as pd
 
+
+
 def main(page: ft.Page):
 
     #Carga de archivos
@@ -301,4 +303,4 @@ def main(page: ft.Page):
             ]
         )
     )
-ft.app(target=main, upload_dir='uploads')
+ft.app(target=main, view=ft.AppView.WEB_BROWSER,upload_dir='uploads')
