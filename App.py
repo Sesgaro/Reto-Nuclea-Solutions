@@ -303,4 +303,4 @@ def main(page: ft.Page):
             ]
         )
     )
-ft.app(target=main, view=ft.AppView.WEB_BROWSER,upload_dir='uploads')
+ft.app(target=main, view=ft.AppView.WEB_BROWSER, web_renderer=ft.WebRenderer.HTML, upload_dir='uploads')
