@@ -4,7 +4,10 @@
 
 **Como Ejecutar:**
 * Inicia tu codespace
-* En la terminal, ejecuta el siguiente comando:  *flet run -w "App.py"*
+* Ingresa el comando *python -m venv ./*
+* A continuacion activa el entorno virtual con *source bin/activate*
+* Instala todos los requerimentos
+* En la terminal, ejecuta el siguiente comando:  *python App.py*
 
 **Funcionamiento**
 - Selecciona el arrchivo a leer.
