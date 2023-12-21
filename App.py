@@ -240,8 +240,8 @@ def main(page: ft.Page):
                     carga.update()
                     grafica.visible=True
                     grafica.update()
-                    page.update()
                     ver_emp.visible=False
+                    page.update()
                     break
             except Exception as ex:
                 print(str(ex))
