@@ -26,7 +26,6 @@ def main(page: ft.Page):
                 archivo_seleccionado.value=f.name
                 items=[pbr_archivo, ft.Text(f.name)]
                 archivos.current.controls.append(ft.Row(items,alignment=ft.MainAxisAlignment.CENTER))
-                # archivo_seleccionado.update()
         
         page.update()
         return (upload_files(None))
@@ -121,14 +120,6 @@ def main(page: ft.Page):
                     if color_at not in color_t_list:
                         color_t_list.append(color_at)
 
-                for i, x in enumerate(pos_id):
-                    if i!=len(pos_id)-1:
-                        difer=pos_id[i+1]-pos_id[i]
-                        mg_list.append(difer)
-                    else:
-                        break
-
-                print(mg_list,"\n")
                 ver_emp.disabled=False
                 
                 
