@@ -17,5 +17,5 @@
 
 **CAPTURAS**
 <p align="center">
-<img src="Primera prueba.png" />
+<img src="img.png" />
 </p>
