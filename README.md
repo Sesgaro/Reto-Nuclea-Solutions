@@ -16,8 +16,9 @@
 - Se mostrara una leyenda donde se le asignara un color aleatorio a cada herramienta y proyecto.
 
 **Error CORS**
-Este error ocurre al momento de ejecutar el codigo y desconozco el porque ocurre, de momento una forma de "solucionarlo"
-es ejecutar el Codespace desde VS Code, dejo un enlaze de una discoción sobre este tema.
+
+  * Este error ocurre al momento de ejecutar el codigo y desconozco el porque ocurre, de momento una forma de "solucionarlo"
+  es ejecutar el Codespace desde VS Code, dejo un enlaze de una discución sobre este tema.
 https://github.com/orgs/community/discussions/15351
 
 **CAPTURAS**
