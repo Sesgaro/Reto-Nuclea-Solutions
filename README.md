@@ -15,6 +15,11 @@
 - Se mostrara una tabla con la fecha, proyecto, y herramienta con la que trabajo
 - Se mostrara una leyenda donde se le asignara un color aleatorio a cada herramienta y proyecto.
 
+**Error CORS**
+Este error ocurre al momento de ejecutar el codigo y desconozco el porque ocurre, de momento una forma de "solucionarlo"
+es ejecutar el Codespace desde VS Code, dejo un enlaze de una discoción sobre este tema.
+https://github.com/orgs/community/discussions/15351
+
 **CAPTURAS**
 <p align="center">
 <img src="img.png" />
